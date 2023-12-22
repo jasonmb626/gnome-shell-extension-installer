@@ -53,6 +53,10 @@ extract_extension() {
   echo "[$1] Extracting extension"
   unzip -qq -o "$TMP_DIR/shell-$SELECTED_VERSION-extension-install.$3.zip" -d "$EXTENSIONS_PATH/$2"
   rm -f "$TMP_DIR/shell-$SELECTED_VERSION-extension-install.$3.zip"
+  if [[ -d $EXTENSIONS_PATH/$2/schemas && ! -f $EXTENSIONS_PATH/$2/schemas/gschemas.compiled ]]; then
+    COMPILER=$(which glib-compile-schemas)
+    [[ -x $COMPILER ]] && $COMPILER $EXTENSIONS_PATH/$2/schemas/. 
+  fi
   return $CODE
 }
 
